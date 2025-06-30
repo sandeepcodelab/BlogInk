@@ -1,4 +1,4 @@
-import config from "../config/config";
+import importEnv from "../config/importEnv";
 import { Client, Account, ID } from "appwrite";
 
 export class AuthService {
@@ -7,8 +7,8 @@ export class AuthService {
 
     constructor(){
         this.client
-            // .setEndpoint(config.appwriteUrl)
-            .setProject(config.appwriteProjectId);
+            // .setEndpoint(importEnv.appwriteUrl)
+            .setProject(importEnv.appwriteProjectId);
 
         this.account = new Account(this.client);
     }
