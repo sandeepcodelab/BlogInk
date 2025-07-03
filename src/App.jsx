@@ -18,7 +18,7 @@ function App() {
         dispatch(login({userData}))
       }
       else{
-        dispatch(logout())
+        dispatch(logout());
       }
     })
     .finally(() => setLoading(false))
@@ -30,7 +30,7 @@ function App() {
       <div className='w-full block'>
         <Header />
           <main>
-            {/* TODO: <Outlet /> */}
+            TODO: {/* <Outlet /> */}
           </main>
         <Footer />
       </div>
