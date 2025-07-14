@@ -43,7 +43,7 @@ function Signup() {
                 <form onSubmit={handleSubmit(create)} className="mt-6">
                     <div className="space-y-5">
                         <Input
-                            label="Full Name: "
+                            label="Full Name"
                             placeholder="Enter your full name"
                             type="text"
                             {...register("name", {
@@ -51,7 +51,7 @@ function Signup() {
                             })}
                         />
                         <Input
-                            label="Email: "
+                            label="Email"
                             placeholder="Enter your email"
                             type="email"
                             {...register("email", {
@@ -62,7 +62,7 @@ function Signup() {
                             })}
                         />
                         <Input
-                            label="Password: "
+                            label="Password"
                             placeholder="Enter your password"
                             type="password"
                             {...register("password", {
@@ -72,7 +72,7 @@ function Signup() {
                         <Button 
                             children="Sign up"
                             type="submit"
-                            className="w-full"
+                            className="w-full cursor-pointer"
                         />
                     </div>
                 </form>

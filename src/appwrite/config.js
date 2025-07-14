@@ -16,7 +16,7 @@ export class Service{
         this.storage = new Storage(this.client);
     }
 
-    async createPost({title, slug, content, image, status, userId}){
+    async createPost({title, slug, content, images, status, userId}){
         try {
             return await this.databases.createDocument(
                 importEnv.appwriteDatabaseId,
@@ -25,7 +25,7 @@ export class Service{
                 {
                     title,
                     content,
-                    image,
+                    images,
                     status,
                     userId
                 }
@@ -86,7 +86,7 @@ export class Service{
 
     async getPosts(quries = [Query.equal("status", "active")]){
         try {
-            return await databases.listDocuments(
+            return await this.databases.listDocuments(
                 importEnv.appwriteDatabaseId,
                 importEnv.appwriteCollectionId,
                 quries
@@ -128,7 +128,7 @@ export class Service{
 
 
     getFilePreview(fileId){
-        return this.storage.getFilePreview(
+        return this.storage.getFileView(
             importEnv.appwriteBucketId,
             fileId
         );

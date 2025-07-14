@@ -44,7 +44,7 @@ function Login() {
                 <form onSubmit={handleSubmit(login)} className="mt-6">
                     <div className="space-y-5">
                         <Input
-                            label="Email: "
+                            label="Email"
                             placeholder="Enter your email"
                             type="email"
                             {...register("email", {
@@ -55,7 +55,7 @@ function Login() {
                             })}
                         />
                         <Input
-                            label="Password: "
+                            label="Password"
                             placeholder="Enter your password"
                             type="password"
                             {...register("password", {
@@ -65,7 +65,7 @@ function Login() {
                         <Button 
                             children="Login"
                             type="submit"
-                            className="w-full"
+                            className="w-full cursor-pointer"
                         />
                     </div>
                 </form>
