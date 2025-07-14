@@ -6,11 +6,11 @@ import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
 
 function PostForm({post}) {
-
+    
     const {register, handleSubmit, watch, setValue, control, getValues} = useForm({
         defaultValues: {
             title: post?.title || "",
-            slug: post?.slug || "",
+            slug: post?.$id || "",
             content: post?.content || "",
             status: post?.status || "active",
         }
@@ -20,34 +20,37 @@ function PostForm({post}) {
     const userData = useSelector((state) => state.auth.userData)
     const submit = async(data) => {
         if (post) {
-            const file = data.image[0] ? appwriteService.uploadFile(data.image[0]) : null
-
+            const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
             if (file) {
-                appwriteService.deleteFile(post.image)
+                await appwriteService.deleteFile(post.images)
             }
-    
+            
             const dbPost = await appwriteService.updatePost(post.$id, {
                 ...data,
                 image: file ? file.$id : undefined,
             })
-    
+            
             if (dbPost) {
                 navigate(`/post/${dbPost.$id}`)
-            } else {
-                const file = await appwriteService.uploadFile(data.image[0])
-                if (file) {
-                    const fileId = file.$id
-                    data.image = fileId
-                    const dbPost = await appwriteService.createPost({
-                        ...data,
-                        userId: userData.$id,
-                    })
-                    if(dbPost){
-                        navigate(`/post/${dbPost.$id}`)
-                    }
+            }
+            
+        } else {
+            
+            const file = await appwriteService.uploadFile(data.image[0])
+            if (file) {
+                const fileId = file.$id
+                data.images = fileId
+                const dbPost = await appwriteService.createPost({
+                    ...data,
+                    userId: userData.$id
+                })
+                if(dbPost){
+                    navigate(`/post/${dbPost.$id}`)
                 }
             }
+            
         }
+  
     }
 
     const slugTransform = useCallback((value) => {
@@ -55,8 +58,8 @@ function PostForm({post}) {
             return value
                 .trim()
                 .toLowerCase()
-                .replace(/^[a-zA-Z\d\s]+/g, '-')
-                .replace(/\s/g, '-')
+                .replace(/[^a-zA-Z0-9 ]/g, '')
+                .replace(/\s+/g, '-')
             
             return ''
     }, [])
@@ -75,10 +78,10 @@ function PostForm({post}) {
     }, [watch, slugTransform, setValue])
 
     return (
-        <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
+        <form onSubmit={handleSubmit(submit)} className="flex flex-wrap justify-center">
             <div className="w-2/3 px-2">
                 <Input 
-                    label="Title :"
+                    label="Title"
                     placeholder="Title"
                     className="mb-4"
                     {...register("title", {
@@ -86,7 +89,7 @@ function PostForm({post}) {
                     })}
                 />
                 <Input 
-                    label="Slug :"
+                    label="Slug"
                     placeholder="slug"
                     className="mb-4"
                     {...register("slug", {
@@ -99,15 +102,15 @@ function PostForm({post}) {
                     }}
                 />
                 <RTE
-                    label="Content :"
+                    label="Content"
                     name="content"
                     control={control}
                     defaultValues={getValues("content")}
                 />
             </div>
-            <div className="w-2/3 px-2">
+            <div className="w-2/3 px-2 mt-4">
                 <Input 
-                    label="Image :"
+                    label="Image"
                     type="file"
                     className="mb-4"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
@@ -118,7 +121,7 @@ function PostForm({post}) {
                 {post && (
                     <div className="w-full mb-4">
                         <img 
-                            src={appwriteService.getFilePreview(post.image)}
+                            src={appwriteService.getFilePreview(post.images)}
                             alt={post.title}
                             className="rounded-lg"
                         />
@@ -133,7 +136,7 @@ function PostForm({post}) {
                 <Button
                     type="submit"
                     bgColor={post ? "bg-green-500" : undefined}
-                    className="w-full"
+                    className="w-full cursor-pointer"
                 >
                     {post ? "Update" : "Submit"}
                 </Button>
