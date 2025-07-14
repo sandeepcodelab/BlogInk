@@ -11,7 +11,7 @@ function Post(){
     const navigate = useNavigate()
     
     const userData = useSelector((state) => state.auth.userData)
-
+  
     const isAuthor = post && userData ? post.userId === userData.$id : false
 
     useEffect(() => {
@@ -26,7 +26,7 @@ function Post(){
     const deletePost = () => {
         appwriteService.deletePost(post.$id).then((status) => {
             if(status){
-                appwriteService.deleteFile(post.image)
+                appwriteService.deleteFile(post.images)
                 navigate("/")
             }
         })
@@ -35,11 +35,11 @@ function Post(){
     return post ? (
         <div className="py-8">
             <Container>
-                <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
+                <div className="w-full h-180 flex justify-center mb-4 relative border rounded-xl p-2">
                     <img 
-                        src={appwriteService.getFilePreview(post.image)}
+                        src={appwriteService.getFilePreview(post.images)}
                         alt={post.title}
-                        className="rounded-xl" 
+                        className="rounded-xl h-full w-full" 
                     />
 
                     {isAuthor && (
